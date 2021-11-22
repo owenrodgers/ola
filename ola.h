@@ -14,6 +14,13 @@ typedef struct
     float c[2];
 }v2f;
 
+// Vector 3 float: v3f
+typedef struct;
+{
+    float c[3];
+}v3f;
+
+
 // Matrix 2 square: m2s
 typedef struct
 {
