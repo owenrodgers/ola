@@ -15,7 +15,7 @@ typedef struct
 }v2f;
 
 // Vector 3 float: v3f
-typedef struct;
+typedef struct
 {
     float c[3];
 }v3f;
@@ -136,6 +136,25 @@ m2s m2s_transpose(m2s mat)
     return mat_t;
 }
 
+m2s m2s_inverse(m2s mat, float determinant)
+{
+    m2s inverse;
+    float inv_factor;
+
+    //det = determinant(mat);
+    inv_factor = 1.0 / determinant;
+    
+    for(int i = 0;i < 2; i++)
+    {
+        for(int j = 0; j < 2; j++)
+        {
+            inverse.m[i][j] = mat.m[i][j] * inv_factor;
+        }
+    }
+
+    return inverse;
+}
+
 
 m3s m3s_transpose(m3s mat)
 {
@@ -152,6 +171,21 @@ m3s m3s_transpose(m3s mat)
     }
     return mat_t;
 }
+
+float m3s_check_inverse(m3s mat, float determinant)
+{
+    float idet;
+    idet = 1 / determinant;
+    return idet;
+}
+m3s m3s_inverse(m3s mat)
+{
+    m3s inverse;
+
+    return mat;
+}
+
+
 
 
 
