@@ -138,12 +138,24 @@ m2s m2s_transpose(m2s mat)
 
 m2s m2s_inverse(m2s mat, float determinant)
 {
+    // Takes the inverse of matrix mat by multiplying each element by 
+    // inverse of the determinant
+    // returns mat of same dimension
     m2s inverse;
-    float inv_factor;
-
-    //det = determinant(mat);
+    float inv_factor, temp;
+    
     inv_factor = 1.0 / determinant;
     
+    // Switch the 0,0 and the 1,1
+    temp = mat.m[0][0];
+    mat.m[0][0] = mat.m[1][1];
+    mat.m[1][1] = temp;
+    
+    // Negate the 0,1 and 1,0
+    mat.m[0][1] = -1.0 * mat.m[0][1];
+    mat.m[1][0] = -1.0 * mat.m[1][0];
+
+    // Multiply each by 1 / determinant
     for(int i = 0;i < 2; i++)
     {
         for(int j = 0; j < 2; j++)
@@ -171,23 +183,5 @@ m3s m3s_transpose(m3s mat)
     }
     return mat_t;
 }
-
-float m3s_check_inverse(m3s mat, float determinant)
-{
-    float idet;
-    idet = 1 / determinant;
-    return idet;
-}
-m3s m3s_inverse(m3s mat)
-{
-    m3s inverse;
-
-    return mat;
-}
-
-
-
-
-
 
 

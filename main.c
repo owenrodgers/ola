@@ -18,20 +18,21 @@ int main()
    
     vec1 = v2f_new(4.0, 3.0);
 
-    //Matrix
-    m2s mat1, mat1_inverse;
-    float m1_det;
-    float m1[2][2] = {{11.0, 9.0},{17.0, 2.0}};
-
+    // Matrix
+    m2s mat1, mat1_inverse, mat1_identity;
+    float determinant;
+    float m1[2][2] = {{4, 7},{2, 6}};
+    
     mat1 = m2s_new(m1);
-    m1_det = m2s_determinant(mat1);
-    mat1_inverse = m2s_inverse(mat1, m1_det);
+    determinant = m2s_determinant(mat1);
 
+    mat1_inverse = m2s_inverse(mat1, determinant);
+    
     for(int i = 0; i < 2; i++)
     {
         for(int j = 0; j < 2; j++)
         {
-            printf("%d , %d : %f\n", i, j, mat1_inverse.m[i][j]);
+            printf("%f\n", mat1_inverse.m[i][j]);
         }
     }
 
