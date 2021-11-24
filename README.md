@@ -17,10 +17,4 @@ Include ola.h
 #include "ola.h"
 
 
-int main()
-{
-    printf("ola implementation"); 
-    return 0;
-}
-
 ```
