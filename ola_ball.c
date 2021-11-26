@@ -12,6 +12,8 @@
 #define Y_CENT HEIGHT / 2
 
 
+// cc -o ola_ball ola_ball.c
+
 typedef struct
 {
     char x [WIDTH][HEIGHT];
