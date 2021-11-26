@@ -28,7 +28,7 @@ typedef struct
 void clear();
 void showframe(frame full);
 
-frame fillframe(frame blank, int n);
+frame fillframe(frame blank);
 frame addcircle(frame full, point c, int radius);
 
 point adjcenter(point c, v2f velo);
@@ -36,8 +36,6 @@ v2f adj_velo(v2f velo, point c);
 
 int main()
 {
-    int ticks = 0;
-    char fillchar;
     frame mframe;
     point c;
     v2f velo;
@@ -51,7 +49,7 @@ int main()
     while(1)
     {
 
-        mframe = fillframe(mframe, ticks);
+        mframe = fillframe(mframe);
         mframe = addcircle(mframe, c, 2);
         
         showframe(mframe);
@@ -59,7 +57,6 @@ int main()
         usleep(1E5);
         clear();
 
-        ticks+=1;
 
         c.x += velo.c[0];
         c.y += velo.c[1];
@@ -113,7 +110,7 @@ void showframe(frame full)
     }
 }
 
-frame fillframe(frame blank, int n)
+frame fillframe(frame blank)
 {
     char fillchar;
     fillchar = ' ';
