@@ -33,6 +33,11 @@ typedef struct
     float m[3][3];
 }m3s;
 
+// Column Vec 3 float, for the rotation matrices
+typedef struct
+{
+    float m[3];
+}cv3f;
 
 
 
@@ -71,6 +76,16 @@ m3s m3s_new(float m1[3][3])
 }
 
 
+cv3f cv3f_new(float m1[3])
+{
+    cv3f c;
+    for(int i = 0; i < 3; i++)
+    {
+        c.m[i] = m1[i];
+    }
+    return c;
+}
+
 // -----Functions-----
 
 float v2f_dotProduct(v2f vec1, v2f vec2)
@@ -90,8 +105,8 @@ float v2f_dotProduct(v2f vec1, v2f vec2)
 float v2f_crossProduct(v2f vec1, v2f vec2)
 {
     // A x B = <(AyBz - AzBy),(AzBx - AxBz),(AxBy - AyBx)>
-    //Cross product of x,y vectors is a scalar in the z direction
-    //returns scalar float
+    //Cross product of x,y vectors is a vector in z direction
+    //returns z vector float
 
     float cz;
     
@@ -168,6 +183,21 @@ m2s m2s_inverse(m2s mat, float determinant)
 }
 
 
+m3s m3s_zerofill()
+{
+    m3s z;
+
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            z.m[i][j] = 0.0;
+        }
+    }
+    return z;
+}
+
+
 m3s m3s_transpose(m3s mat)
 {
     // Transpose of mat denoted mat^t of a square 3x3 matrix
@@ -183,5 +213,96 @@ m3s m3s_transpose(m3s mat)
     }
     return mat_t;
 }
+
+// for rotations I need 4 functions
+// rm_pitch, rm_roll, rm_yaw
+// multiply a column mat X,Y,Z by a 3x3 rotation matrix
+
+// http://planning.cs.uiuc.edu/node102.html
+
+m3s m3s_pitchrot(float sigma)
+{
+    m3s rm;
+    rm = m3s_zerofill();
+
+     
+    rm.m[0][0] = cos(sigma);
+    rm.m[0][2] = sin(sigma);
+    rm.m[1][1] = 1.0; 
+    rm.m[2][0] = -1.0 * sin(sigma);
+    rm.m[2][2] = cos(sigma);
+        
+    return rm;
+}
+
+m3s m3s_rollrot(float sigma)
+{
+    m3s rm;
+    rm = m3s_zerofill();
+    
+    rm.m[0][0] = 1.0;
+    rm.m[1][1] = cos(sigma);
+    rm.m[1][2] = -1.0 * sin(sigma); 
+    rm.m[2][1] = sin(sigma);
+    rm.m[2][2] = cos(sigma);
+    
+    return rm;
+
+
+}
+
+
+m3s m3s_yawrot(float sigma)
+{
+    m3s rm;
+    rm = m3s_zerofill();
+     
+    rm.m[0][0] = cos(sigma);
+    rm.m[0][1] = -1.0 * sin(sigma);
+    rm.m[1][0] = sin(sigma);
+    rm.m[1][1] = cos(sigma);
+    rm.m[2][2] = 1.0;
+    return rm;
+}
+
+
+cv3f cv3f_m3s_multiply(cv3f xyz, m3s rotmat)
+{
+    cv3f xyz_prime;
+    int temp =0;
+    for(int i = 0; i < 3; i++)
+    {
+        xyz_prime.m[i] = 0.0;
+        for(int j = 0; j < 3; j++)
+        {
+            xyz_prime.m[i] += (rotmat.m[i][j] * xyz.m[j]);
+           
+        }
+    }
+    return xyz_prime;
+}
+
+
+cv3f rpy_translation(cv3f xyz, float alpha, float beta, float gamma)
+{
+    // alpha: roll, beta: pitch, gamma: yaw
+    m3s rm_roll = m3s_rollrot(alpha);
+    m3s rm_pitch = m3s_pitchrot(beta);
+    m3s rm_yaw = m3s_yawrot(gamma);
+
+    cv3f resulting;
+    // for each rotation:
+    // resulting x',y',z' = multiply(xyz, rm_roll)
+    
+    resulting = cv3f_m3s_multiply(xyz, rm_roll);
+    resulting = cv3f_m3s_multiply(resulting, rm_pitch);
+    resulting = cv3f_m3s_multiply(resulting, rm_yaw);
+    return resulting;
+}
+
+
+
+
+
 
 
